@@ -5,6 +5,7 @@ let edad = Joi.number().min(3);
 let dni = Joi.string().min(3);
 let curso = Joi.string().min(3);
 let nota = Joi.number().min(3);
+let ingreso = Joi.boolean();
 
 const estudiantesSchema = {
     nombre: nombre.required(),
@@ -12,7 +13,8 @@ const estudiantesSchema = {
     edad: edad.required(),
     dni: dni.required(),
     curso: curso.required(),
-    nota: nota.required()
+    nota: nota.required(),
+    ingreso
 }
 
 
