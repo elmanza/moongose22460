@@ -1,9 +1,56 @@
 let {connection, mongoose} = require("./config/database")
 let {Schema, model} = mongoose;
 let {estudiantesSchema} = require("./schemas/estudiante");
+let {usuariosSchema} = require("./schemas/usuario");
+let { db: firebaseDB } = require("./utils/firebase")
+
+
 let estudiantesSchemaModel = new Schema(estudiantesSchema);
 let EstudianteModel = new model('estudiantes', estudiantesSchemaModel);
 
+let usuariosSchemaModel = new Schema(usuariosSchema);
+let UsuarioModel = new model('usuarios', usuariosSchemaModel);
+
+
+(async ()=>{
+    try {
+
+        let coloresArr = [
+            {nombre: 'blue'},
+            {nombre: 'yellow'},
+            {nombre: 'pink'},
+            {nombre: 'red'},
+            {nombre: 'green'}
+        ]
+        let colores = firebaseDB.collection('colores');
+        for (const element of coloresArr) {
+            // await colores.doc().set(element);
+        }
+
+        let res = await colores.get();
+        let dataFirebase = [];
+        res.forEach(element =>{
+            dataFirebase.push({id: element.id, ...element.data()});
+            console.log({id: element.id, ...element.data()});
+        })
+
+        dataFirebase.forEach(async element =>{
+            if(element.nombre == "green"){
+                await colores.doc(element.id).delete();
+            }
+        });
+
+
+
+        // let new_user = new UsuarioModel({ nombre: 'Daniel', apellido: 'Gallo', dni: '37923460'});
+        // new_user.save();
+
+        // let res_A = await UsuarioModel.find();
+        // console.log(res);
+    } catch (error) {
+        console.log(error);
+    }
+})();
 
 const estudiantes = [
     { nombre: 'Pedro', apellido: 'Mei', edad: 21, dni: '31155898', curso: '1A', nota: 7 },
@@ -130,4 +177,4 @@ const estudiantes = [
     } catch (error) {
         console.log(error);
     }
-})();
+});
